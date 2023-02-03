@@ -1,6 +1,5 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:video_player/video_player.dart';
 
 class PostScreen extends StatefulWidget {
@@ -14,60 +13,80 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   late VideoPlayerController _controller;
+  ChewieController? _chewieController;
+
   @override
   void initState() {
     super.initState();
-    print(widget.url);
-    _controller = VideoPlayerController.network(widget.url);
-    _controller.initialize().then((_) {
-      _controller.play();
-      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-      setState(() {});
-    });
-    _controller.addListener(() {
-      if (_controller.value.position == _controller.value.duration) {
-        _controller.seekTo(Duration(seconds: 0));
-        _controller.play();
-      }
-    });
+    _initPlayer();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : Container(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play();
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
-      ),
+  Future<void> _initPlayer() async {
+    _controller = VideoPlayerController.network(widget.url);
+    await _controller.initialize();
+    _createChewieController();
+    setState(() {});
+    // _chewieController = ChewieController(
+    //   videoPlayerController: _controller,
+    //   aspectRatio: _controller.value.aspectRatio,
+    //   autoInitialize: true,
+    //   autoPlay: true,
+    //   looping: true,
+    //   errorBuilder: (context, errorMessage) {
+    //     return Center(
+    //       child: Text(
+    //         errorMessage,
+    //         style: TextStyle(color: Colors.white),
+    //       ),
+    //     );
+    //   },
+    // );
+  }
+
+  void _createChewieController() {
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      aspectRatio: _controller.value.aspectRatio,
+      autoInitialize: true,
+      autoPlay: true,
+      looping: true,
+      errorBuilder: (context, errorMessage) {
+        return Center(
+          child: Text(
+            errorMessage,
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      },
     );
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    _chewieController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+        ),
+        body: _chewieController != null
+            ? Container(
+                child: Chewie(
+                  controller: _chewieController!,
+                ),
+              )
+            : Center(
+                child: CircularProgressIndicator(color: Colors.black),
+              ));
   }
 }

@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:app_rareuser/models/post_model.dart';
+
 import '../commons/constants.dart';
 import '../models/country_model.dart';
 import '../models/influencer_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-class CountryProv with ChangeNotifier {
-  List<CountryModel> _item = [];
-  List<CountryModel> get items {
+class PostProv with ChangeNotifier {
+  List<PostModel> _item = [];
+  List<PostModel> get items {
     return [..._item];
   }
 
@@ -19,20 +21,23 @@ class CountryProv with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final url = Uri.parse('${Endpoint.baseUrl}/country');
+    final url = Uri.parse('${Endpoint.baseUrl}/posts');
 
     try {
       final response = await http.get(url);
       final extractedData = jsonDecode(response.body) as List;
-      final loadedCountry = extractedData.map((countryData) {
-        return CountryModel(
-          sId: countryData['_id'],
-          name: countryData['name'],
-          countryId: countryData['country_id'],
+      final loadedPosts = extractedData.map((postsData) {
+        return PostModel(
+          url: postsData['url'],
+          source: postsData['source'],
+          file: postsData['file'],
+          thumbnail: postsData['thumbnail'],
+          sId: postsData['_id'],
+          userId: postsData['user_id'],
         );
       }).toList();
 
-      _item = loadedCountry;
+      _item = loadedPosts;
       print(response.body);
       notifyListeners();
     } catch (error) {

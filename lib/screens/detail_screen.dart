@@ -3,18 +3,22 @@ import 'dart:convert';
 import 'package:app_rareuser/screens/pic_screen.dart';
 import 'package:app_rareuser/screens/post_screen.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
+import 'package:app_rareuser/widgets/custom_banner_ads.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/influencer_model.dart';
 import '../providers/influencer.dart';
+import '../service/ad_mob_service.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key});
+  final String args;
+  const DetailScreen({required this.args, super.key});
   static const routeName = '/detail';
 
   @override
@@ -24,6 +28,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   var _isLoading = false;
   String _name = '';
+  String _gender = '';
 
   @override
   void initState() {
@@ -31,17 +36,18 @@ class _DetailScreenState extends State<DetailScreen> {
       _isLoading = true;
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final args = ModalRoute.of(context)!.settings.arguments as String;
-      Provider.of<Influencer>(context, listen: false)
-          .detail(args)
-          .catchError((error) {})
-          .then((value) {
-        setState(() {
-          _isLoading = false;
-        });
+    Provider.of<Influencer>(context, listen: false)
+        .detail(widget.args)
+        .catchError((error) {})
+        .then((value) {
+      setState(() {
+        _isLoading = false;
       });
     });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final args = ModalRoute.of(context)!.settings.arguments as String;
+
+    // });
     super.initState();
   }
 
@@ -61,46 +67,56 @@ class _DetailScreenState extends State<DetailScreen> {
     if (influData.items_detail.length == 0) {
       setState(() {
         _name = '';
+        _gender = '';
       });
     } else {
       setState(() {
         _name = influData.items_detail[0].name.toString();
+        _gender = influData.items_detail[0].gender.toString();
       });
     }
-    final args = ModalRoute.of(context)!.settings.arguments as String;
+    // final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
-        title: Text(
-          _name,
-          style: TextStyle(color: Colors.black),
+        title: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                _name,
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              _gender == 'male'
+                  ? Icon(
+                      Icons.male_rounded,
+                      color: Colors.blue,
+                    )
+                  : Icon(
+                      Icons.female_rounded,
+                      color: Colors.pink,
+                    ),
+            ],
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: _isLoading
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  "assets/images/run.png",
-                  width: 400.0,
-                  fit: BoxFit.contain,
-                ),
-                CircularProgressIndicator(),
-              ],
+          ? Center(
+              child: CircularProgressIndicator(color: Colors.black),
             )
           : influData.items_detail.length == 0
               ? Center(
                   child: Text('Not Found'),
                 )
-              : Padding(
-                  padding: EdgeInsets.all(10),
+              : SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     child: Column(
                       children: [
                         Row(
@@ -110,13 +126,27 @@ class _DetailScreenState extends State<DetailScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(influData
-                                        .items_detail[0].pic
-                                        .toString()),
-                                    maxRadius: 50,
-                                    minRadius: 15,
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      child: Image.network(
+                                        influData.items_detail[0].pic
+                                            .toString(),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
+                                  // CircleAvatar(
+                                  //   backgroundImage: NetworkImage(influData
+                                  //       .items_detail[0].pic
+                                  //       .toString()),
+                                  //   maxRadius: 40,
+                                  //   minRadius: 15,
+                                  // ),
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -135,51 +165,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: double.infinity,
-                                    height: 26,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(bottom: 8),
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        shrinkWrap: true,
-                                        itemCount: influData
-                                            .items_detail[0].platforms?.length,
-                                        itemBuilder: ((context, index) => Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    _launchURL(influData
-                                                        .items_detail[0]
-                                                        .platforms![index]
-                                                        .link
-                                                        .toString());
-                                                  },
-                                                  child: Text(
-                                                    influData
-                                                        .items_detail[0]
-                                                        .platforms![index]
-                                                        .platform
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                          shape:
-                                                              StadiumBorder()),
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                )
-                                              ],
-                                            )),
-                                      ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      influData.items_detail[0].desc.toString(),
                                     ),
-                                  ),
-                                  Text(
-                                    influData.items_detail[0].desc.toString(),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -211,16 +201,17 @@ class _DetailScreenState extends State<DetailScreen> {
                                   Container(
                                     width: double.infinity,
                                     height: 26,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        shrinkWrap: true,
-                                        itemCount: influData
-                                            .items_detail[0].tags?.length,
-                                        itemBuilder: ((context, index) => Row(
-                                              children: [
-                                                ElevatedButton(
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      itemCount: influData
+                                          .items_detail[0].tags?.length,
+                                      itemBuilder: ((context, index) => Row(
+                                            children: [
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(bottom: 5),
+                                                child: ElevatedButton(
                                                   onPressed: () {
                                                     Navigator.push(
                                                       context,
@@ -245,14 +236,16 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   style:
                                                       ElevatedButton.styleFrom(
                                                           shape:
-                                                              StadiumBorder()),
+                                                              StadiumBorder(),
+                                                          backgroundColor:
+                                                              Colors.black),
                                                 ),
-                                                SizedBox(
-                                                  width: 5,
-                                                )
-                                              ],
-                                            )),
-                                      ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              )
+                                            ],
+                                          )),
                                     ),
                                   ),
                                 ],
@@ -260,13 +253,31 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 300,
+                        Card(
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomBannerAds(),
+                        )),
+                        Divider(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 15,
+                              ),
+                              child: Text(
+                                'Posts',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey),
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 300,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount:
@@ -299,16 +310,12 @@ class _DetailScreenState extends State<DetailScreen> {
                                                 const BorderRadius.all(
                                               Radius.circular(10),
                                             ),
-                                            child: Row(
-                                              children: [
-                                                Image.network(
-                                                  influData.items_detail[0]
-                                                      .posts![j].thumbnail
-                                                      .toString(),
-                                                  height: 250,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              ],
+                                            child: Image.network(
+                                              influData.items_detail[0]
+                                                  .posts![j].thumbnail
+                                                  .toString(),
+                                              height: 250,
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
                                         ),
@@ -319,7 +326,89 @@ class _DetailScreenState extends State<DetailScreen> {
                                     )),
                               ),
                             ),
-                          ),
+                          ],
+                        ),
+                        Divider(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15, bottom: 15),
+                              child: Text(
+                                'Social Media ',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey),
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 80,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount:
+                                    influData.items_detail[0].platforms?.length,
+                                itemBuilder: ((context, index) => Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            _launchURL(influData.items_detail[0]
+                                                .platforms![index].link
+                                                .toString());
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10),
+                                                )),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(16),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    influData
+                                                        .items_detail[0]
+                                                        .platforms![index]
+                                                        .platform
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[600],
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    influData
+                                                        .items_detail[0]
+                                                        .platforms![index]
+                                                        .username
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

@@ -1,18 +1,17 @@
-import 'package:app_rareuser/models/influencer_model.dart';
 import 'package:app_rareuser/providers/country.dart';
 import 'package:app_rareuser/providers/influencer.dart';
-import 'package:app_rareuser/screens/botton_bar_navigation.dart';
-import 'package:app_rareuser/screens/detail_screen.dart';
+import 'package:app_rareuser/providers/post.dart';
+import 'package:app_rareuser/routes/route.dart';
 import 'package:app_rareuser/screens/favorite_screen.dart';
 import 'package:app_rareuser/screens/home_screen.dart';
-import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:app_rareuser/splashScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/post_screen.dart';
-
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -29,12 +28,16 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => CountryProv(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => PostProv(),
         )
       ],
       child: MaterialApp(
+        onGenerateRoute: (settings) => RouteGenerate.generateRoute(settings),
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primaryColor: Colors.black,
           fontFamily: 'Montserrat',
         ),
         // home: BottonBarNavigation(),
@@ -42,7 +45,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeScreen.routeName: (ctx) => HomeScreen(),
           FavoriteScreen.routeName: (ctx) => FavoriteScreen(),
-          DetailScreen.routeName: (ctx) => DetailScreen(),
+          // DetailScreen.routeName: (ctx) => DetailScreen(),
         },
       ),
     );

@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    Future.delayed(const Duration(seconds: 2)).then((val) {
+    Future.delayed(const Duration(seconds: 3)).then((val) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => BottonBarNavigation()),
@@ -25,38 +25,33 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Image.asset(
-              "assets/images/splash.png",
-              width: 400.0,
-              fit: BoxFit.contain,
-            ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Center(
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  "assets/images/logo_w.png",
-                  width: 27,
+                  "assets/images/logo.png",
+                  width: 170,
                   fit: BoxFit.contain,
                 ),
                 SizedBox(
-                  width: 10,
+                  height: 30,
                 ),
-                Text(
-                  'Rare User',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                Image.asset(
+                  "assets/images/rareuser.png",
+                  width: 130,
+                  fit: BoxFit.contain,
                 ),
+
+                // Text(
+                //   'Rare User',
+                //   style: TextStyle(fontSize: 30, color: Colors.white),
+                // ),
               ],
             ),
           ),

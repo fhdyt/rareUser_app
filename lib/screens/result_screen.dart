@@ -1,9 +1,10 @@
 import 'package:app_rareuser/providers/influencer.dart';
+import 'package:app_rareuser/widgets/custom_banner_ads.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
+import '../service/ad_mob_service.dart';
 import '../widgets/influencer-list-tile.dart';
 
 class Resultscreen extends StatefulWidget {
@@ -48,58 +49,72 @@ class _ResultscreenState extends State<Resultscreen> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
-          title: Text(
-            widget.name,
-            style: TextStyle(color: Colors.black),
+          title: Row(
+            children: [
+              Text(
+                widget.name,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           backgroundColor: Colors.white,
           elevation: 0,
         ),
         body: Container(
           child: _isLoading
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/run.png",
-                      width: 400.0,
-                      fit: BoxFit.contain,
-                    ),
-                    CircularProgressIndicator(),
-                  ],
+              ? Center(
+                  child: CircularProgressIndicator(color: Colors.black),
                 )
               : influData.items_search.length == 0
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/sad.png",
-                          width: 400.0,
-                          fit: BoxFit.contain,
-                        ),
-                      ],
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Not any user found.',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Back',
+                              style: TextStyle(),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                shape: StadiumBorder(),
+                                backgroundColor: Colors.black),
+                          ),
+                        ],
+                      ),
                     )
                   : ListView.builder(
                       itemCount: influData.items_search.length,
-                      itemBuilder: ((_, i) => Column(
-                            children: [
-                              InfluencerListTile(
-                                influData.items_search[i].sId.toString(),
-                                influData.items_search[i].name.toString(),
-                                influData.items_search[i].pic.toString(),
-                                influData.items_search[i].desc.toString(),
-                                influData.items_search[i].country!.countryId
-                                    .toString(),
-                                influData.items_search[i].country!.name
-                                    .toString(),
-                                influData.items_search[i].gender.toString(),
-                                influData.items_search[i].tags!.toList(),
-                              ),
-                              Divider()
-                            ],
-                          )),
+                      itemBuilder: ((_, i) {
+                        if (i % 3 == 0 && i > 0) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: CustomBannerAds(),
+                          );
+                        } else {
+                          return InfluencerListTile(
+                            influData.items_search[i].sId.toString(),
+                            influData.items_search[i].name.toString(),
+                            influData.items_search[i].pic.toString(),
+                            influData.items_search[i].desc.toString(),
+                            influData.items_search[i].country!.countryId
+                                .toString(),
+                            influData.items_search[i].country!.name.toString(),
+                            influData.items_search[i].gender.toString(),
+                            influData.items_search[i].tags!.toList(),
+                          );
+                        }
+                      }),
                     ),
         ));
   }

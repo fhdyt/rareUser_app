@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app_rareuser/commons/constants.dart';
+
 import '../models/influencer_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -20,40 +22,49 @@ class Influencer with ChangeNotifier {
     return [..._item_detail];
   }
 
+  List<String> _item_tags = [];
+  List<String> get items_tags {
+    return [..._item_tags];
+  }
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   Future<void> fetchData() async {
-    final url = Uri.parse('https://rareuser.goldenisland.id/influencer');
+    final url = Uri.parse(Endpoint.influencer);
+    if (_item.isEmpty) {
+      try {
+        final response = await http.get(url);
+        final List<InfluencerModel> loadedProducts = [];
+        final extractedData = json.decode(response.body);
 
-    try {
-      final response = await http.get(url);
-      final List<InfluencerModel> loadedProducts = [];
-      final extractedData = json.decode(response.body);
-
-      extractedData.forEach((influencerData) {
-        loadedProducts.add(InfluencerModel(
-          sId: influencerData['_id'],
-          name: influencerData['name'],
-          pic: influencerData['pic'],
-          desc: influencerData['desc'],
-          country: Country(
-            influencerData['country']['name'],
-            influencerData['country']['country_id'],
-          ),
-          gender: influencerData['gender'],
-          tags: (influencerData['tags'] as List)
-              .map((tags) => tags.toString())
-              .toList(),
-        ));
-      });
-      _item = loadedProducts;
-      notifyListeners();
-    } catch (error) {
-      throw error;
+        extractedData.forEach((influencerData) {
+          loadedProducts.add(InfluencerModel(
+            sId: influencerData['_id'],
+            name: influencerData['name'],
+            pic: influencerData['pic'],
+            desc: influencerData['desc'],
+            country: Country(
+              influencerData['country']['name'],
+              influencerData['country']['country_id'],
+            ),
+            gender: influencerData['gender'],
+            tags: (influencerData['tags'] as List)
+                .map((tags) => tags.toString())
+                .toList(),
+          ));
+        });
+        _item = loadedProducts;
+      } catch (error) {
+        throw error;
+      }
+      // _isLoading = false;
+      // notifyListeners();
     }
   }
 
   Future<void> search(String param, String query) async {
-    final url =
-        Uri.parse('https://rareuser.goldenisland.id/search/${param}/${query}');
+    final url = Uri.parse('${Endpoint.baseUrl}/search/${param}/${query}');
     try {
       final response = await http.get(url);
       final List<InfluencerModel> loadedSearch = [];
@@ -82,8 +93,7 @@ class Influencer with ChangeNotifier {
   }
 
   Future<void> detail(String args) async {
-    final url =
-        Uri.parse('https://rareuser.goldenisland.id/influencer/${args}');
+    final url = Uri.parse('${Endpoint.baseUrl}/influencer/${args}');
     try {
       final response = await http.get(url);
       final List<InfluencerModel> loaded = [];
@@ -132,5 +142,25 @@ class Influencer with ChangeNotifier {
       _item_detail = [];
       throw error;
     }
+  }
+
+  Future<void> allTags() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final url = Uri.parse('${Endpoint.baseUrl}/search/tags/all');
+    try {
+      final response = await http.get(url);
+      final extractedData = jsonDecode(response.body);
+      print(extractedData);
+      _item_tags =
+          (extractedData as List).map((tags) => tags.toString()).toList();
+      notifyListeners();
+    } catch (error) {
+      _item_tags = [];
+      throw error;
+    }
+    _isLoading = false;
+    notifyListeners();
   }
 }

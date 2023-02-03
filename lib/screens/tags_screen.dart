@@ -1,4 +1,5 @@
 import 'package:app_rareuser/models/influencer_model.dart';
+import 'package:app_rareuser/providers/influencer.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
@@ -6,19 +7,19 @@ import 'package:provider/provider.dart';
 
 import '../providers/country.dart';
 
-class CountryScreen extends StatefulWidget {
-  const CountryScreen({super.key});
+class TagsScreen extends StatefulWidget {
+  const TagsScreen({super.key});
 
   @override
-  State<CountryScreen> createState() => _CountryScreenState();
+  State<TagsScreen> createState() => _TagsScreenState();
 }
 
-class _CountryScreenState extends State<CountryScreen> {
+class _TagsScreenState extends State<TagsScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<CountryProv>(context, listen: false)
-          .fetchData()
+      Provider.of<Influencer>(context, listen: false)
+          .allTags()
           .catchError((error) {
         print(error);
       }).then((value) {});
@@ -29,7 +30,7 @@ class _CountryScreenState extends State<CountryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final countryData = Provider.of<CountryProv>(context);
+    final countryData = Provider.of<Influencer>(context);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -42,7 +43,7 @@ class _CountryScreenState extends State<CountryScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Country',
+              'Tags',
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
@@ -62,29 +63,19 @@ class _CountryScreenState extends State<CountryScreen> {
                 : Container(
                     width: double.infinity,
                     child: ListView.builder(
-                      itemCount: countryData.items.length,
+                      itemCount: countryData.items_tags.length,
                       itemBuilder: ((context, index) => Card(
                             child: ListTile(
-                              leading: Flag.fromString(
-                                  countryData.items[index].countryId.toString(),
-                                  height: 50,
-                                  width: 40),
                               title: Text(
-                                countryData.items[index].name.toString(),
-                              ),
-                              subtitle: Text(
-                                countryData.items[index].countryId.toString(),
-                              ),
+                                  '#${countryData.items_tags[index].toString()}'),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Resultscreen(
-                                      param: 'country',
-                                      query: countryData.items[index].sId
-                                          .toString(),
-                                      name: countryData.items[index].name
-                                          .toString(),
+                                      param: 'tags',
+                                      query: countryData.items_tags[index],
+                                      name: countryData.items_tags[index],
                                     ),
                                   ),
                                 );
