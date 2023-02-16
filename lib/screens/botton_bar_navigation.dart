@@ -14,7 +14,11 @@ class BottonBarNavigation extends StatefulWidget {
 }
 
 class _BottonBarNavigationState extends State<BottonBarNavigation> {
-  List screens = [HomeScreen(), AllPostScreen(), CountryScreen(), TagsScreen()];
+  List screens = [
+    HomeScreen(),
+    CountryScreen(),
+    TagsScreen(),
+  ];
   var _currentIndex = 0;
 
   void onTapBar(int index) {
@@ -32,10 +36,10 @@ class _BottonBarNavigationState extends State<BottonBarNavigation> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: CustomBannerAds(),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10, right: 10),
+          //   child: CustomBannerAds(),
+          // ),
           SalomonBottomBar(
             currentIndex: _currentIndex,
             onTap: onTapBar,
@@ -45,11 +49,11 @@ class _BottonBarNavigationState extends State<BottonBarNavigation> {
                 title: Text("Home"),
                 selectedColor: Theme.of(context).primaryColor,
               ),
-              SalomonBottomBarItem(
-                icon: Icon(Icons.grid_on_rounded),
-                title: Text("Posts"),
-                selectedColor: Theme.of(context).primaryColor,
-              ),
+              // SalomonBottomBarItem(
+              //   icon: Icon(Icons.grid_on_rounded),
+              //   title: Text("Posts"),
+              //   selectedColor: Theme.of(context).primaryColor,
+              // ),
               SalomonBottomBarItem(
                 icon: Icon(Icons.pin_drop_rounded),
                 title: Text("Country"),

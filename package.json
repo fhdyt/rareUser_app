@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue-confirm-dialog": "^1.1.0"
+  }
+}

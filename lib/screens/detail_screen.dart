@@ -253,81 +253,10 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                           ],
                         ),
-                        Card(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CustomBannerAds(),
-                        )),
-                        Divider(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 15,
-                              ),
-                              child: Text(
-                                'Posts',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 300,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    influData.items_detail[0].posts?.length,
-                                itemBuilder: ((context, j) => Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            // Navigator.pushNamed(
-                                            //     context, PostScreen.routeName,
-                                            //     arguments: influData.items_detail[0]
-                                            //         .posts![j].file
-                                            //         .toString());
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PostScreen(
-                                                        url: influData
-                                                            .items_detail[0]
-                                                            .posts![j]
-                                                            .file
-                                                            .toString()),
-                                              ),
-                                            );
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                            child: Image.network(
-                                              influData.items_detail[0]
-                                                  .posts![j].thumbnail
-                                                  .toString(),
-                                              height: 250,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        )
-                                      ],
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: CustomBannerAds(),
+                        // ),
                         Divider(),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -398,6 +327,76 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   ),
                                                 ],
                                               ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 15,
+                              ),
+                              child: Text(
+                                'Posts',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey),
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 300,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount:
+                                    influData.items_detail[0].posts?.length,
+                                itemBuilder: ((context, j) => Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            // Navigator.pushNamed(
+                                            //     context, PostScreen.routeName,
+                                            //     arguments: influData.items_detail[0]
+                                            //         .posts![j].file
+                                            //         .toString());
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PostScreen(
+                                                        url: influData
+                                                            .items_detail[0]
+                                                            .posts![j]
+                                                            .file
+                                                            .toString()),
+                                              ),
+                                            );
+                                          },
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            child: Image.network(
+                                              influData.items_detail[0]
+                                                  .posts![j].thumbnail
+                                                  .toString(),
+                                              height: 250,
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
                                         ),

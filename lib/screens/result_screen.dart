@@ -96,7 +96,7 @@ class _ResultscreenState extends State<Resultscreen> {
                   : ListView.builder(
                       itemCount: influData.items_search.length,
                       itemBuilder: ((_, i) {
-                        if (i % 3 == 0 && i > 0) {
+                        if (i % 10 == 0 && i > 0) {
                           return Padding(
                             padding: const EdgeInsets.only(left: 10, right: 10),
                             child: CustomBannerAds(),
