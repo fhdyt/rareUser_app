@@ -1,6 +1,7 @@
 import 'package:app_rareuser/providers/country.dart';
 import 'package:app_rareuser/providers/influencer.dart';
 import 'package:app_rareuser/providers/post.dart';
+import 'package:app_rareuser/providers/social_media.dart';
 import 'package:app_rareuser/routes/route.dart';
 import 'package:app_rareuser/screens/favorite_screen.dart';
 import 'package:app_rareuser/screens/home_screen.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (ctx) => PostProv(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => SocialMediaProv(),
         )
       ],
       child: MaterialApp(

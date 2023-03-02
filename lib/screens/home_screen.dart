@@ -48,22 +48,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InfoScreen(),
-                ),
-              );
-            },
-            child: Icon(
-              Icons.info,
-              color: Colors.black,
-            ),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => InfoScreen(),
+        //         ),
+        //       );
+        //     },
+        //     child: Icon(
+        //       Icons.info,
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        // ],
         systemOverlayStyle: SystemUiOverlayStyle(
           // Status bar color
           statusBarColor: Colors.white,
@@ -73,6 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               "assets/images/rareuser.png",
@@ -81,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // Column(
             //   mainAxisAlignment: MainAxisAlignment.center,
-            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   crossAxisAlignment: CrossAxisAlignment.center,
             //   children: [
             //     Text(
             //       'Rare User',

@@ -163,4 +163,24 @@ class Influencer with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> allPlatform() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final url = Uri.parse('${Endpoint.baseUrl}/search/platform/all');
+    try {
+      final response = await http.get(url);
+      final extractedData = jsonDecode(response.body);
+      print(extractedData);
+      _item_tags =
+          (extractedData as List).map((tags) => tags.toString()).toList();
+      notifyListeners();
+    } catch (error) {
+      _item_tags = [];
+      throw error;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 }

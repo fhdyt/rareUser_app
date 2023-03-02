@@ -37,28 +37,18 @@ class InfluencerListTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: InkWell(
-                  child: Container(
-                    height: 75,
-                    width: 75,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      child: Image.network(
-                        pic,
-                        fit: BoxFit.cover,
-                      ),
+                child: Container(
+                  height: 75,
+                  width: 75,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                    child: Image.network(
+                      pic,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PicScreen(url: pic),
-                      ),
-                    );
-                  },
                 ),
               ),
               Expanded(

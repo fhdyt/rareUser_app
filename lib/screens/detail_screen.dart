@@ -253,10 +253,10 @@ class _DetailScreenState extends State<DetailScreen> {
                             ),
                           ],
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: CustomBannerAds(),
-                        // ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomBannerAds(),
+                        ),
                         Divider(),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
