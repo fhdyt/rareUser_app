@@ -33,6 +33,7 @@ class _BottonBarNavigationState extends State<BottonBarNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff1A1A1A),
       body: screens[_currentIndex],
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
@@ -43,28 +44,29 @@ class _BottonBarNavigationState extends State<BottonBarNavigation> {
             child: CustomBannerAds(),
           ),
           SalomonBottomBar(
+            unselectedItemColor: Color(0xfff7f7f7),
             currentIndex: _currentIndex,
             onTap: onTapBar,
             items: [
               SalomonBottomBarItem(
                 icon: Icon(Icons.home),
                 title: Text("Home"),
-                selectedColor: Theme.of(context).primaryColor,
+                selectedColor: Color(0xff93deff),
               ),
               SalomonBottomBarItem(
                 icon: Icon(Icons.person_pin_rounded),
                 title: Text("Social Media"),
-                selectedColor: Theme.of(context).primaryColor,
+                selectedColor: Color(0xff93deff),
               ),
               SalomonBottomBarItem(
                 icon: Icon(Icons.pin_drop_rounded),
                 title: Text("Country"),
-                selectedColor: Theme.of(context).primaryColor,
+                selectedColor: Color(0xff93deff),
               ),
               SalomonBottomBarItem(
                 icon: Icon(Icons.grid_3x3_outlined),
                 title: Text("Tags"),
-                selectedColor: Theme.of(context).primaryColor,
+                selectedColor: Color(0xff93deff),
               ),
             ],
           ),

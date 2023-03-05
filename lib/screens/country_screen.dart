@@ -31,11 +31,12 @@ class _CountryScreenState extends State<CountryScreen> {
   Widget build(BuildContext context) {
     final countryData = Provider.of<CountryProv>(context);
     return Scaffold(
+      backgroundColor: Color(0xff1A1A1A),
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Color(0xfff7f7f7),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff1A1A1A),
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -43,8 +44,8 @@ class _CountryScreenState extends State<CountryScreen> {
           children: [
             Text(
               'Country',
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -53,7 +54,7 @@ class _CountryScreenState extends State<CountryScreen> {
         padding: EdgeInsets.all(8),
         child: countryData.isLoading
             ? Center(
-                child: CircularProgressIndicator(color: Colors.black),
+                child: CircularProgressIndicator(color: Color(0xfff7f7f7)),
               )
             : countryData.items.length == 0
                 ? Center(
@@ -65,16 +66,18 @@ class _CountryScreenState extends State<CountryScreen> {
                       itemCount: countryData.items.length,
                       itemBuilder: ((context, index) => Card(
                             child: ListTile(
+                              tileColor: Color(0xff616571),
                               leading: Flag.fromString(
                                   countryData.items[index].countryId.toString(),
                                   height: 50,
                                   width: 40),
                               title: Text(
                                 countryData.items[index].name.toString(),
+                                style: TextStyle(color: Color(0xfff7f7f7)),
                               ),
                               subtitle: Text(
-                                countryData.items[index].countryId.toString(),
-                              ),
+                                  countryData.items[index].countryId.toString(),
+                                  style: TextStyle(color: Color(0xfff7f7f7))),
                               onTap: () {
                                 Navigator.push(
                                   context,

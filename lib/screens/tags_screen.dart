@@ -32,42 +32,40 @@ class _TagsScreenState extends State<TagsScreen> {
   Widget build(BuildContext context) {
     final countryData = Provider.of<Influencer>(context);
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+        backgroundColor: Color(0xff1A1A1A),
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Color(0xfff7f7f7),
+          ),
+          backgroundColor: Color(0xff1A1A1A),
+          elevation: 0,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Tags',
+                style: TextStyle(
+                    color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Tags',
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(8),
-        child: countryData.isLoading
-            ? Center(
-                child: CircularProgressIndicator(color: Colors.black),
-              )
-            : countryData.items.length == 0
-                ? Center(
-                    child: Text('Not Found'),
-                  )
-                : Container(
-                    width: double.infinity,
-                    child: ListView.builder(
+        body: Padding(
+          padding: EdgeInsets.all(8),
+          child: countryData.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(color: Color(0xfff7f7f7)),
+                )
+              : countryData.items.length == 0
+                  ? Center(
+                      child: Text('Not Found'),
+                    )
+                  : ListView.builder(
                       itemCount: countryData.items_tags.length,
-                      itemBuilder: ((context, index) => Card(
-                            child: ListTile(
-                              title: Text(
-                                  '#${countryData.items_tags[index].toString()}'),
+                      itemBuilder: ((context, index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: InkWell(
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -80,11 +78,28 @@ class _TagsScreenState extends State<TagsScreen> {
                                   ),
                                 );
                               },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xff1A1A1A),
+                                    border: Border.all(
+                                      color: Color(0xfff7f7f7),
+                                      width: 2,
+                                    )),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15),
+                                  child: Text(
+                                    '#${countryData.items_tags[index].toString()}',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      color: Color(0xfff7f7f7),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           )),
                     ),
-                  ),
-      ),
-    );
+        ));
   }
 }

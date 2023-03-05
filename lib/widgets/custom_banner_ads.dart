@@ -46,10 +46,10 @@ class _CustomBannerAdsState extends State<CustomBannerAds> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 6),
+                padding: const EdgeInsets.only(bottom: 2),
                 child: Text(
                   'Advertisement',
-                  style: TextStyle(fontSize: 10),
+                  style: TextStyle(fontSize: 10, color: Color(0xfff7f7f7)),
                 ),
               ),
               Container(

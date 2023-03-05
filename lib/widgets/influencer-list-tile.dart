@@ -31,7 +31,7 @@ class InfluencerListTile extends StatelessWidget {
               arguments: ModelRoute(id: sId, gender: gender));
         },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,12 +58,19 @@ class InfluencerListTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xfff7f7f7),
+                            ),
+                          ),
+                          Icon(Icons.female_rounded, color: Colors.pink)
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 5, bottom: 5),
@@ -77,7 +84,10 @@ class InfluencerListTile extends StatelessWidget {
                             ),
                             Text(
                               country_name,
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Color(0xfff7f7f7),
+                              ),
                             ),
                           ],
                         ),
@@ -114,12 +124,13 @@ class InfluencerListTile extends StatelessWidget {
                                       child: Text(
                                         '#${tags[index]}',
                                         style: TextStyle(
-                                          fontSize: 10,
-                                        ),
+                                            fontSize: 10,
+                                            color: Color(0xff1a1a1a)),
                                       ),
                                       style: ElevatedButton.styleFrom(
-                                          shape: StadiumBorder(),
-                                          backgroundColor: Colors.black),
+                                        shape: StadiumBorder(),
+                                        backgroundColor: Color(0xff93deff),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -133,16 +144,16 @@ class InfluencerListTile extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  gender == 'male'
-                      ? Icon(
-                          Icons.male_rounded,
-                          color: Colors.blue,
-                        )
-                      : Icon(Icons.female_rounded, color: Colors.pink),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     gender == 'male'
+              //         ? Icon(
+              //             Icons.male_rounded,
+              //             color: Colors.blue,
+              //           )
+              //         : Icon(Icons.female_rounded, color: Colors.pink),
+              //   ],
+              // ),
             ],
           ),
         ),

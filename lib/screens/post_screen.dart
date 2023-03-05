@@ -71,12 +71,12 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff1A1A1A),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xff1A1A1A),
           elevation: 0,
           iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
+            color: Color(0xfff7f7f7),
           ),
         ),
         body: _chewieController != null
@@ -86,7 +86,9 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               )
             : Center(
-                child: CircularProgressIndicator(color: Colors.black),
+                child: CircularProgressIndicator(
+                  color: Color(0xfff7f7f7),
+                ),
               ));
   }
 }

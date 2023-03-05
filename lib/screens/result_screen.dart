@@ -45,28 +45,31 @@ class _ResultscreenState extends State<Resultscreen> {
   Widget build(BuildContext context) {
     final influData = Provider.of<Influencer>(context);
     return Scaffold(
+        backgroundColor: Color(0xff1A1A1A),
         appBar: AppBar(
           iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
+            color: Color(0xfff7f7f7),
           ),
           title: Row(
             children: [
               Text(
                 widget.name,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Color(0xfff7f7f7),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xff1A1A1A),
           elevation: 0,
         ),
         body: Container(
           child: _isLoading
               ? Center(
-                  child: CircularProgressIndicator(color: Colors.black),
+                  child: CircularProgressIndicator(
+                    color: Color(0xfff7f7f7),
+                  ),
                 )
               : influData.items_search.length == 0
                   ? Center(
@@ -76,7 +79,10 @@ class _ResultscreenState extends State<Resultscreen> {
                         children: [
                           Text(
                             'Not any user found.',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Color(0xfff7f7f7),
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -84,11 +90,11 @@ class _ResultscreenState extends State<Resultscreen> {
                             },
                             child: Text(
                               'Back',
-                              style: TextStyle(),
+                              style: TextStyle(color: Color(0xff1a1a1a)),
                             ),
                             style: ElevatedButton.styleFrom(
                                 shape: StadiumBorder(),
-                                backgroundColor: Colors.black),
+                                backgroundColor: Color(0xff93deff)),
                           ),
                         ],
                       ),

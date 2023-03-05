@@ -29,11 +29,12 @@ class _SocialMediaScreenState extends State<SocialMediaScreen> {
   Widget build(BuildContext context) {
     final socialMediaData = Provider.of<SocialMediaProv>(context);
     return Scaffold(
+      backgroundColor: Color(0xff1A1A1A),
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Color(0xfff7f7f7), //change your color here
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff1A1A1A),
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -41,8 +42,8 @@ class _SocialMediaScreenState extends State<SocialMediaScreen> {
           children: [
             Text(
               'Social Media',
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -51,7 +52,9 @@ class _SocialMediaScreenState extends State<SocialMediaScreen> {
         padding: EdgeInsets.all(8),
         child: socialMediaData.isLoading
             ? Center(
-                child: CircularProgressIndicator(color: Colors.black),
+                child: CircularProgressIndicator(
+                  color: Color(0xfff7f7f7),
+                ),
               )
             : socialMediaData.items.length == 0
                 ? Center(
@@ -59,13 +62,15 @@ class _SocialMediaScreenState extends State<SocialMediaScreen> {
                   )
                 : Container(
                     width: double.infinity,
-                    child: ListView.builder(
-                      itemCount: socialMediaData.items.length,
-                      itemBuilder: ((context, index) => Card(
-                            child: ListTile(
-                              title: Text(
-                                socialMediaData.items[index].name.toString(),
-                              ),
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 200,
+                                childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10),
+                        itemCount: socialMediaData.items.length,
+                        itemBuilder: ((context, index) => InkWell(
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -80,9 +85,65 @@ class _SocialMediaScreenState extends State<SocialMediaScreen> {
                                   ),
                                 );
                               },
-                            ),
-                          )),
-                    ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xff1A1A1A),
+                                    border: Border.all(
+                                      color: Color(0xfff7f7f7),
+                                      width: 2,
+                                    )),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: socialMediaData.items[index].name ==
+                                          'Tiktok'
+                                      ? Image.asset(
+                                          "assets/images/social_media/Tiktok.png",
+                                          fit: BoxFit.contain,
+                                        )
+                                      : socialMediaData.items[index].name ==
+                                              'Instagram'
+                                          ? Image.asset(
+                                              "assets/images/social_media/Instagram.png",
+                                              fit: BoxFit.contain,
+                                            )
+                                          : socialMediaData.items[index].name ==
+                                                  'Facebook'
+                                              ? Image.asset(
+                                                  "assets/images/social_media/Facebook.png",
+                                                  fit: BoxFit.contain,
+                                                )
+                                              : socialMediaData
+                                                          .items[index].name ==
+                                                      'Bigo'
+                                                  ? Image.asset(
+                                                      "assets/images/social_media/Bigo.png",
+                                                      fit: BoxFit.contain,
+                                                    )
+                                                  : socialMediaData.items[index]
+                                                              .name ==
+                                                          'Youtube'
+                                                      ? Image.asset(
+                                                          "assets/images/social_media/Youtube.png",
+                                                          fit: BoxFit.contain,
+                                                        )
+                                                      : socialMediaData
+                                                                  .items[index]
+                                                                  .name ==
+                                                              'Twitter'
+                                                          ? Image.asset(
+                                                              "assets/images/social_media/Twitter.png",
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            )
+                                                          : Image.asset(
+                                                              "assets/images/logo.png",
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ),
+                                ),
+                              ),
+                            ))),
                   ),
       ),
     );

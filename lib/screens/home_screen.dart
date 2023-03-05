@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/influencer.dart';
-import 'info_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -28,15 +27,21 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _isLoading = true;
       });
-
-      Provider.of<Influencer>(context, listen: false)
-          .fetchData()
-          .catchError((error) {})
-          .then((value) {
+      final cekData = Provider.of<Influencer>(context);
+      if (cekData.items.length == 0) {
+        Provider.of<Influencer>(context, listen: false)
+            .fetchData()
+            .catchError((error) {})
+            .then((value) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      } else {
         setState(() {
           _isLoading = false;
         });
-      });
+      }
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -46,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final influData = Provider.of<Influencer>(context);
     return Scaffold(
+      backgroundColor: Color(0xff1A1A1A),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         // actions: [
@@ -66,18 +72,18 @@ class _HomeScreenState extends State<HomeScreen> {
         // ],
         systemOverlayStyle: SystemUiOverlayStyle(
           // Status bar color
-          statusBarColor: Colors.white,
+          statusBarColor: Color(0xff1A1A1A),
 
           // Status bar brightness (optional)
-          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+          statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+          statusBarBrightness: Brightness.dark, // For iOS (dark icons)
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              "assets/images/rareuser.png",
+              "assets/images/rareuser_w.png",
               width: 120,
               fit: BoxFit.contain,
             ),
@@ -98,15 +104,17 @@ class _HomeScreenState extends State<HomeScreen> {
             // ),
           ],
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff1A1A1A),
         elevation: 0,
       ),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(color: Colors.black),
+              child: CircularProgressIndicator(
+                color: Color(0xfff7f7f7),
+              ),
             )
           : Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: const EdgeInsets.only(top: 5),
               child: RefreshIndicator(
                 onRefresh: () => _refresh(context),
                 child: ListView.builder(

@@ -6,15 +6,10 @@ import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:app_rareuser/widgets/custom_banner_ads.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/influencer_model.dart';
 import '../providers/influencer.dart';
-import '../service/ad_mob_service.dart';
 
 class DetailScreen extends StatefulWidget {
   final String args;
@@ -77,9 +72,10 @@ class _DetailScreenState extends State<DetailScreen> {
     }
     // final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
+      backgroundColor: Color(0xff1A1A1A),
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Color(0xfff7f7f7), //change your color here
         ),
         title: Container(
           child: Row(
@@ -88,8 +84,8 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               Text(
                 _name,
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
               ),
               _gender == 'male'
                   ? Icon(
@@ -103,12 +99,14 @@ class _DetailScreenState extends State<DetailScreen> {
             ],
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff1A1A1A),
         elevation: 0,
       ),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(color: Colors.black),
+              child: CircularProgressIndicator(
+                color: Color(0xfff7f7f7),
+              ),
             )
           : influData.items_detail.length == 0
               ? Center(
@@ -124,7 +122,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           children: [
                             Container(
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.only(right: 10),
                                 child: InkWell(
                                   child: Container(
                                     height: 100,
@@ -169,11 +167,14 @@ class _DetailScreenState extends State<DetailScreen> {
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Text(
                                       influData.items_detail[0].desc.toString(),
+                                      style: TextStyle(
+                                        color: Color(0xfff7f7f7),
+                                      ),
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 10, bottom: 5),
+                                        top: 10, bottom: 10),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -184,8 +185,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                             influData.items_detail[0].country!
                                                 .countryId
                                                 .toString(),
-                                            height: 15,
-                                            width: 15),
+                                            height: 20,
+                                            width: 20),
                                         SizedBox(
                                           width: 5,
                                         ),
@@ -193,14 +194,17 @@ class _DetailScreenState extends State<DetailScreen> {
                                           influData
                                               .items_detail[0].country!.name
                                               .toString(),
-                                          style: TextStyle(fontSize: 10),
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              color: Color(0xfff7f7f7),
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Container(
                                     width: double.infinity,
-                                    height: 26,
+                                    height: 30,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       shrinkWrap: true,
@@ -230,15 +234,16 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   child: Text(
                                                     '#${influData.items_detail[0].tags?[index]}',
                                                     style: TextStyle(
-                                                      fontSize: 10,
-                                                    ),
+                                                        fontSize: 13,
+                                                        color:
+                                                            Color(0xff1a1a1a)),
                                                   ),
                                                   style:
                                                       ElevatedButton.styleFrom(
-                                                          shape:
-                                                              StadiumBorder(),
-                                                          backgroundColor:
-                                                              Colors.black),
+                                                    shape: StadiumBorder(),
+                                                    backgroundColor:
+                                                        Color(0xff93deff),
+                                                  ),
                                                 ),
                                               ),
                                               SizedBox(
@@ -254,10 +259,9 @@ class _DetailScreenState extends State<DetailScreen> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(top: 12),
                           child: CustomBannerAds(),
                         ),
-                        Divider(),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,12 +269,23 @@ class _DetailScreenState extends State<DetailScreen> {
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 15, bottom: 15),
-                              child: Text(
-                                'Social Media ',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Social Media ',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff93deff)),
+                                  ),
+                                  Text(
+                                    'Tap Social Media account below to visit ${_name} profile. ',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
@@ -291,47 +306,24 @@ class _DetailScreenState extends State<DetailScreen> {
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                color: Colors.grey[200],
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(10),
+                                                ),
+                                                border: Border.all(
+                                                  color: Color(0xfff7f7f7),
+                                                  width: 2,
                                                 )),
                                             child: Padding(
                                               padding: const EdgeInsets.all(16),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    influData
-                                                        .items_detail[0]
-                                                        .platforms![index]
-                                                        .platform
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey[600],
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(
-                                                    influData
-                                                        .items_detail[0]
-                                                        .platforms![index]
-                                                        .username
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                    ),
-                                                  ),
-                                                ],
+                                              child: Image.asset(
+                                                "assets/images/social_media/${influData.items_detail[0].platforms![index].platform.toString()}.png",
+                                                fit: BoxFit.contain,
                                               ),
                                             ),
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 10,
                                         )
                                       ],
                                     )),
@@ -346,14 +338,25 @@ class _DetailScreenState extends State<DetailScreen> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(
-                                top: 15,
+                                top: 10,
                               ),
-                              child: Text(
-                                'Posts',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Posts',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff93deff)),
+                                  ),
+                                  Text(
+                                    'Please note that the following post has been extracted from the ${_name} account.',
+                                    style: TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
@@ -401,7 +404,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 8,
                                         )
                                       ],
                                     )),

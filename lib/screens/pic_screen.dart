@@ -9,15 +9,16 @@ class PicScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff1A1A1A),
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Color(0xfff7f7f7), //change your color here
         ),
         title: Text(
           '',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff1A1A1A),
         elevation: 0,
       ),
       body: Center(

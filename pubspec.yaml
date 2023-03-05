@@ -79,6 +79,12 @@ flutter:
     - assets/images/logo.png
     - assets/images/rareuser.png
     - assets/images/rareuser_w.png
+    - assets/images/social_media/Tiktok.png
+    - assets/images/social_media/Instagram.png
+    - assets/images/social_media/Facebook.png
+    - assets/images/social_media/Bigo.png
+    - assets/images/social_media/Youtube.png
+    - assets/images/social_media/Twitter.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
