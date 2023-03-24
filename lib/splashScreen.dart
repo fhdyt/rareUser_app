@@ -1,6 +1,7 @@
 import 'package:app_rareuser/screens/botton_bar_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,16 +11,31 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  var _welcome = false;
+
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Future.delayed(const Duration(seconds: 2)).then((val) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => BottonBarNavigation()),
+        // MaterialPageRoute(builder: (context) => TestAppBar()),
       );
     });
+
+    // _prefs.then((SharedPreferences prefs) {
+    //   final bool? welcomPref = prefs.getBool('welcome');
+    //   welcomPref != null
+    //       ? Navigator.pushReplacement(
+    //           context,
+    //           MaterialPageRoute(builder: (context) => BottonBarNavigation()),
+    //         )
+    //       : Navigator.pushReplacement(
+    //           context,
+    //           MaterialPageRoute(builder: (context) => TestAppBar()),
+    //         );
     // });
   }
 
@@ -52,16 +68,9 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 Image.asset(
                   "assets/images/logo.png",
-                  width: 170,
+                  width: 150,
                   fit: BoxFit.contain,
                 ),
-                SizedBox(
-                  height: 30,
-                ),
-                // Text(
-                //   'Rare User',
-                //   style: TextStyle(fontSize: 30, color: Colors.white),
-                // ),
               ],
             ),
           ),

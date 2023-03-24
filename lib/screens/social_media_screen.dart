@@ -1,6 +1,5 @@
 import 'package:app_rareuser/providers/social_media.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
-import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,9 +1,9 @@
+import 'package:app_rareuser/service/ad_helper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
   static String? get bannerAdUnitId {
-    // return 'ca-app-pub-3940256099942544/6300978111'; //Test
-    return 'ca-app-pub-7552873818056721/5227029496';
+    return AdHelper.bannerAdUnitId; //Test
   }
 
   static final BannerAdListener bannerAdListener = BannerAdListener(

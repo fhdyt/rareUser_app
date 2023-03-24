@@ -1,4 +1,3 @@
-import 'package:app_rareuser/screens/all_post_screen.dart';
 import 'package:app_rareuser/screens/country_screen.dart';
 import 'package:app_rareuser/screens/home_screen.dart';
 import 'package:app_rareuser/screens/social_media_screen.dart';

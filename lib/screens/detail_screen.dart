@@ -1,15 +1,13 @@
-import 'dart:convert';
-
-import 'package:app_rareuser/screens/pic_screen.dart';
 import 'package:app_rareuser/screens/post_screen.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
-import 'package:app_rareuser/widgets/custom_banner_ads.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/influencer.dart';
+import '../widgets/custom_native_ads.dart';
+import '../widgets/incluencer-list-horizontal.dart';
 
 class DetailScreen extends StatefulWidget {
   final String args;
@@ -38,6 +36,13 @@ class _DetailScreenState extends State<DetailScreen> {
       setState(() {
         _isLoading = false;
       });
+    });
+
+    Provider.of<Influencer>(context, listen: false)
+        .related(widget.args)
+        .catchError((error) {})
+        .then((value) {
+      print('related');
     });
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   final args = ModalRoute.of(context)!.settings.arguments as String;
@@ -72,350 +77,411 @@ class _DetailScreenState extends State<DetailScreen> {
     }
     // final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
-      backgroundColor: Color(0xff1A1A1A),
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Color(0xfff7f7f7), //change your color here
-        ),
-        title: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                _name,
-                style: TextStyle(
-                    color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
-              ),
-              _gender == 'male'
-                  ? Icon(
-                      Icons.male_rounded,
-                      color: Colors.blue,
-                    )
-                  : Icon(
-                      Icons.female_rounded,
-                      color: Colors.pink,
-                    ),
-            ],
-          ),
-        ),
         backgroundColor: Color(0xff1A1A1A),
-        elevation: 0,
-      ),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                color: Color(0xfff7f7f7),
-              ),
-            )
-          : influData.items_detail.length == 0
-              ? Center(
-                  child: Text('Not Found'),
-                )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Column(
-                      children: [
-                        Row(
+        // appBar: AppBar(
+        //   iconTheme: IconThemeData(
+        //     color: Color(0xfff7f7f7), //change your color here
+        //   ),
+        //   title: Container(
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       crossAxisAlignment: CrossAxisAlignment.center,
+        //       children: [
+        //         Text(
+        //           _name,
+        //           style: TextStyle(
+        //               color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
+        //         ),
+        //         _gender == 'male'
+        //             ? Icon(
+        //                 Icons.male_rounded,
+        //                 color: Colors.blue,
+        //               )
+        //             : Icon(
+        //                 Icons.female_rounded,
+        //                 color: Colors.pink,
+        //               ),
+        //       ],
+        //     ),
+        //   ),
+        //   backgroundColor: Colors.amber,
+        //   elevation: 0,
+        // ),
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xfff7f7f7),
+                ),
+              )
+            : influData.items_detail.length == 0
+                ? Center(
+                    child: Text('Not Found'),
+                  )
+                : NestedScrollView(
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                      return <Widget>[
+                        SliverAppBar(
+                          expandedHeight:
+                              MediaQuery.of(context).size.height * 0.55,
+                          floating: true,
+                          pinned: true,
+                          backgroundColor: Color(0xff1A1A1A),
+                          elevation: 0,
+                          flexibleSpace: FlexibleSpaceBar(
+                            centerTitle: true,
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Text(
+                                      _name,
+                                      style: TextStyle(
+                                          color: Color(0xfff7f7f7),
+                                          fontWeight: FontWeight.bold),
+                                      softWrap: false,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                  ),
+                                ),
+                                _gender == 'male'
+                                    ? Icon(
+                                        Icons.male_rounded,
+                                        color: Colors.blue,
+                                      )
+                                    : Icon(
+                                        Icons.female_rounded,
+                                        color: Colors.pink,
+                                      ),
+                              ],
+                            ),
+                            background: Image.network(
+                              influData.items_detail[0].pic.toString(),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      ];
+                    },
+                    body: Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Center(
+                        child: contentMethod(influData, context),
+                      ),
+                    ),
+                  )
+        // newMethod(influData, context),
+        );
+  }
+
+  SingleChildScrollView contentMethod(
+      Influencer influData, BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          influData.items_detail[0].desc.toString(),
+                          style: TextStyle(
+                            color: Color(0xfff7f7f7),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: InkWell(
-                                  child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10),
+                            Flag.fromString(
+                                influData.items_detail[0].country!.countryId
+                                    .toString(),
+                                height: 24,
+                                width: 24),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              influData.items_detail[0].country!.name
+                                  .toString(),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Color(0xfff7f7f7),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 35,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemCount: influData.items_detail[0].tags?.length,
+                          itemBuilder: ((context, index) => Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 5),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Resultscreen(
+                                                param: 'tags',
+                                                query: influData.items_detail[0]
+                                                    .tags![index],
+                                                name: influData.items_detail[0]
+                                                    .tags![index]),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        '#${influData.items_detail[0].tags?[index]}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Color(0xff1a1a1a)),
                                       ),
-                                      child: Image.network(
-                                        influData.items_detail[0].pic
-                                            .toString(),
-                                        fit: BoxFit.cover,
+                                      style: ElevatedButton.styleFrom(
+                                        shape: StadiumBorder(),
+                                        backgroundColor: Color(0xff93deff),
                                       ),
                                     ),
                                   ),
-                                  // CircleAvatar(
-                                  //   backgroundImage: NetworkImage(influData
-                                  //       .items_detail[0].pic
-                                  //       .toString()),
-                                  //   maxRadius: 40,
-                                  //   minRadius: 15,
-                                  // ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => PicScreen(
-                                            url: influData.items_detail[0].pic
-                                                .toString()),
-                                      ),
-                                    );
-                                  },
+                                  SizedBox(
+                                    width: 5,
+                                  )
+                                ],
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: CustomNativeAds(),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Social Media ',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff93deff)),
+                      ),
+                      Text(
+                        'Tap Social Media account below to visit ${_name} profile. ',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 80,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: influData.items_detail[0].platforms?.length,
+                    itemBuilder: ((context, index) => Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                _launchURL(influData
+                                    .items_detail[0].platforms![index].link
+                                    .toString());
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    border: Border.all(
+                                      color: Color(0xfff7f7f7),
+                                      width: 2,
+                                    )),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Image.asset(
+                                    "assets/images/social_media/${influData.items_detail[0].platforms![index].platform.toString()}.png",
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      influData.items_detail[0].desc.toString(),
-                                      style: TextStyle(
-                                        color: Color(0xfff7f7f7),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Flag.fromString(
-                                            influData.items_detail[0].country!
-                                                .countryId
-                                                .toString(),
-                                            height: 20,
-                                            width: 20),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          influData
-                                              .items_detail[0].country!.name
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color(0xfff7f7f7),
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    height: 30,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: true,
-                                      itemCount: influData
-                                          .items_detail[0].tags?.length,
-                                      itemBuilder: ((context, index) => Row(
-                                            children: [
-                                              Container(
-                                                margin:
-                                                    EdgeInsets.only(bottom: 5),
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => Resultscreen(
-                                                            param: 'tags',
-                                                            query: influData
-                                                                .items_detail[0]
-                                                                .tags![index],
-                                                            name: influData
-                                                                .items_detail[0]
-                                                                .tags![index]),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    '#${influData.items_detail[0].tags?[index]}',
-                                                    style: TextStyle(
-                                                        fontSize: 13,
-                                                        color:
-                                                            Color(0xff1a1a1a)),
-                                                  ),
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    shape: StadiumBorder(),
-                                                    backgroundColor:
-                                                        Color(0xff93deff),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            SizedBox(
+                              width: 10,
+                            )
                           ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: CustomBannerAds(),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15, bottom: 15),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Social Media ',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xff93deff)),
-                                  ),
-                                  Text(
-                                    'Tap Social Media account below to visit ${_name} profile. ',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 80,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount:
-                                    influData.items_detail[0].platforms?.length,
-                                itemBuilder: ((context, index) => Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            _launchURL(influData.items_detail[0]
-                                                .platforms![index].link
-                                                .toString());
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10),
-                                                ),
-                                                border: Border.all(
-                                                  color: Color(0xfff7f7f7),
-                                                  width: 2,
-                                                )),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(16),
-                                              child: Image.asset(
-                                                "assets/images/social_media/${influData.items_detail[0].platforms![index].platform.toString()}.png",
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        )
-                                      ],
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Posts',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xff93deff)),
-                                  ),
-                                  Text(
-                                    'Please note that the following post has been extracted from the ${_name} account.',
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              height: 300,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    influData.items_detail[0].posts?.length,
-                                itemBuilder: ((context, j) => Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            // Navigator.pushNamed(
-                                            //     context, PostScreen.routeName,
-                                            //     arguments: influData.items_detail[0]
-                                            //         .posts![j].file
-                                            //         .toString());
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PostScreen(
-                                                        url: influData
-                                                            .items_detail[0]
-                                                            .posts![j]
-                                                            .file
-                                                            .toString()),
-                                              ),
-                                            );
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                            child: Image.network(
-                                              influData.items_detail[0]
-                                                  .posts![j].thumbnail
-                                                  .toString(),
-                                              height: 250,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        )
-                                      ],
-                                    )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                        )),
                   ),
                 ),
+              ],
+            ),
+            Divider(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Posts',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff93deff)),
+                      ),
+                      Text(
+                        'Please note that the following post has been extracted from the ${_name} social media.',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 300,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: influData.items_detail[0].posts?.length,
+                    itemBuilder: ((context, j) => Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                // Navigator.pushNamed(
+                                //     context, PostScreen.routeName,
+                                //     arguments: influData.items_detail[0]
+                                //         .posts![j].file
+                                //         .toString());
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PostScreen(
+                                        url: influData
+                                            .items_detail[0].posts![j].file
+                                            .toString()),
+                                  ),
+                                );
+                              },
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                child: FadeInImage.assetNetwork(
+                                  image: influData
+                                      .items_detail[0].posts![j].thumbnail
+                                      .toString(),
+                                  placeholder: "assets/images/loading-post.png",
+                                  height: 250,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            )
+                          ],
+                        )),
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Related User',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff93deff)),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Container(
+                  width: double.infinity,
+                  height: 300,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: influData.items_related.length,
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: ((context, i) =>
+                              InfluencerListHorizontal(
+                                influData.items_related[i].sId.toString(),
+                                influData.items_related[i].name.toString(),
+                                influData.items_related[i].pic.toString(),
+                                influData.items_related[i].desc.toString(),
+                                influData.items_related[i].country!.countryId
+                                    .toString(),
+                                influData.items_related[i].country!.name
+                                    .toString(),
+                                influData.items_related[i].gender.toString(),
+                                influData.items_related[i].tags!.toList(),
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

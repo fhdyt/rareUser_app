@@ -12,6 +12,11 @@ class Influencer with ChangeNotifier {
     return [..._item];
   }
 
+  List<InfluencerModel> _item_top = [];
+  List<InfluencerModel> get items_top {
+    return [..._item_top];
+  }
+
   List<InfluencerModel> _item_search = [];
   List<InfluencerModel> get items_search {
     return [..._item_search];
@@ -20,6 +25,11 @@ class Influencer with ChangeNotifier {
   List<InfluencerModel> _item_detail = [];
   List<InfluencerModel> get items_detail {
     return [..._item_detail];
+  }
+
+  List<InfluencerModel> _item_related = [];
+  List<InfluencerModel> get items_related {
+    return [..._item_related];
   }
 
   List<String> _item_tags = [];
@@ -63,6 +73,39 @@ class Influencer with ChangeNotifier {
     }
   }
 
+  Future<void> fetchDataTop() async {
+    final url = Uri.parse('${Endpoint.baseUrl}/search/influencer/top');
+    if (_item_top.isEmpty) {
+      try {
+        final response = await http.get(url);
+        final List<InfluencerModel> loadedProducts = [];
+        final extractedData = json.decode(response.body);
+
+        extractedData.forEach((influencerData) {
+          loadedProducts.add(InfluencerModel(
+            sId: influencerData['_id'],
+            name: influencerData['name'],
+            pic: influencerData['pic'],
+            desc: influencerData['desc'],
+            country: Country(
+              influencerData['country']['name'],
+              influencerData['country']['country_id'],
+            ),
+            gender: influencerData['gender'],
+            tags: (influencerData['tags'] as List)
+                .map((tags) => tags.toString())
+                .toList(),
+          ));
+        });
+        _item_top = loadedProducts;
+      } catch (error) {
+        throw error;
+      }
+      // _isLoading = false;
+      // notifyListeners();
+    }
+  }
+
   Future<void> search(String param, String query) async {
     final url = Uri.parse('${Endpoint.baseUrl}/search/${param}/${query}');
     try {
@@ -90,6 +133,38 @@ class Influencer with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<void> related(String args) async {
+    final url = Uri.parse('${Endpoint.baseUrl}/influencer/related/${args}');
+
+    try {
+      final response = await http.get(url);
+      final List<InfluencerModel> loadedProducts = [];
+      final extractedData = json.decode(response.body);
+
+      extractedData.forEach((influencerData) {
+        loadedProducts.add(InfluencerModel(
+          sId: influencerData['_id'],
+          name: influencerData['name'],
+          pic: influencerData['pic'],
+          desc: influencerData['desc'],
+          country: Country(
+            influencerData['country']['name'],
+            influencerData['country']['country_id'],
+          ),
+          gender: influencerData['gender'],
+          tags: (influencerData['tags'] as List)
+              .map((tags) => tags.toString())
+              .toList(),
+        ));
+      });
+      _item_related = loadedProducts;
+    } catch (error) {
+      throw error;
+    }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> detail(String args) async {

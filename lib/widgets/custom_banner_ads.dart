@@ -1,9 +1,9 @@
+import 'package:app_rareuser/service/ad_helper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-import '../service/ad_mob_service.dart';
 
 class CustomBannerAds extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _CustomBannerAdsState extends State<CustomBannerAds> {
   void initState() {
     _banner = BannerAd(
       size: AdSize.fullBanner,
-      adUnitId: AdMobService.bannerAdUnitId!,
+      adUnitId: AdHelper.bannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           setState(() {
@@ -45,13 +45,6 @@ class _CustomBannerAdsState extends State<CustomBannerAds> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: Text(
-                  'Advertisement',
-                  style: TextStyle(fontSize: 10, color: Color(0xfff7f7f7)),
-                ),
-              ),
               Container(
                 height: _banner!.size.height.toDouble(),
                 child: AdWidget(ad: _banner!),

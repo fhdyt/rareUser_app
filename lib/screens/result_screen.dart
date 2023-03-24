@@ -1,10 +1,8 @@
 import 'package:app_rareuser/providers/influencer.dart';
-import 'package:app_rareuser/widgets/custom_banner_ads.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-import '../service/ad_mob_service.dart';
+import '../widgets/custom_native_ads.dart';
 import '../widgets/influencer-list-tile.dart';
 
 class Resultscreen extends StatefulWidget {
@@ -105,7 +103,7 @@ class _ResultscreenState extends State<Resultscreen> {
                         if (i % 10 == 0 && i > 0) {
                           return Padding(
                             padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: CustomBannerAds(),
+                            child: CustomNativeAds(),
                           );
                         } else {
                           return InfluencerListTile(

@@ -1,4 +1,3 @@
-import 'package:app_rareuser/models/influencer_model.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
@@ -66,18 +65,18 @@ class _CountryScreenState extends State<CountryScreen> {
                       itemCount: countryData.items.length,
                       itemBuilder: ((context, index) => Card(
                             child: ListTile(
-                              tileColor: Color(0xff616571),
+                              // tileColor: Color(0xff616571),
                               leading: Flag.fromString(
                                   countryData.items[index].countryId.toString(),
                                   height: 50,
                                   width: 40),
                               title: Text(
                                 countryData.items[index].name.toString(),
-                                style: TextStyle(color: Color(0xfff7f7f7)),
+                                style: TextStyle(color: Color(0xff1A1A1A)),
                               ),
                               subtitle: Text(
                                   countryData.items[index].countryId.toString(),
-                                  style: TextStyle(color: Color(0xfff7f7f7))),
+                                  style: TextStyle(color: Color(0xff1A1A1A))),
                               onTap: () {
                                 Navigator.push(
                                   context,

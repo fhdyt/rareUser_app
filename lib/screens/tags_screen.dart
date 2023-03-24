@@ -1,11 +1,7 @@
-import 'package:app_rareuser/models/influencer_model.dart';
 import 'package:app_rareuser/providers/influencer.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
-import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../providers/country.dart';
 
 class TagsScreen extends StatefulWidget {
   const TagsScreen({super.key});
@@ -80,12 +76,13 @@ class _TagsScreenState extends State<TagsScreen> {
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Color(0xff1A1A1A),
-                                    border: Border.all(
-                                      color: Color(0xfff7f7f7),
-                                      width: 2,
-                                    )),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xff1A1A1A),
+                                  border: Border.all(
+                                    color: Color(0xfff7f7f7),
+                                    width: 1.5,
+                                  ),
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(15),
                                   child: Text(

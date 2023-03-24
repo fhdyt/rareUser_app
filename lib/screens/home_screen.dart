@@ -1,3 +1,5 @@
+import 'package:app_rareuser/screens/result_screen.dart';
+import 'package:app_rareuser/screens/top_screen.dart';
 import 'package:app_rareuser/widgets/influencer-list-tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -117,18 +119,88 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(top: 5),
               child: RefreshIndicator(
                 onRefresh: () => _refresh(context),
-                child: ListView.builder(
-                  itemCount: influData.items.length,
-                  itemBuilder: ((context, i) => InfluencerListTile(
-                        influData.items[i].sId.toString(),
-                        influData.items[i].name.toString(),
-                        influData.items[i].pic.toString(),
-                        influData.items[i].desc.toString(),
-                        influData.items[i].country!.countryId.toString(),
-                        influData.items[i].country!.name.toString(),
-                        influData.items[i].gender.toString(),
-                        influData.items[i].tags!.toList(),
-                      )),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Top User',
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff93deff)),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Resultscreen(
+                                      param: 'influencer',
+                                      query: 'top-all',
+                                      name: 'Top User',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Show All',
+                                style: TextStyle(
+                                  color: Color(0xfff7f7f7),
+                                  fontSize: 12,
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 155,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: TopScreen(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        'Latest User',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff93deff)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: influData.items.length,
+                        shrinkWrap: true,
+                        itemBuilder: ((context, i) => InfluencerListTile(
+                              influData.items[i].sId.toString(),
+                              influData.items[i].name.toString(),
+                              influData.items[i].pic.toString(),
+                              influData.items[i].desc.toString(),
+                              influData.items[i].country!.countryId.toString(),
+                              influData.items[i].country!.name.toString(),
+                              influData.items[i].gender.toString(),
+                              influData.items[i].tags!.toList(),
+                            )),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -1,8 +1,5 @@
-import 'package:app_rareuser/models/influencer_model.dart';
 import 'package:app_rareuser/providers/post.dart';
 import 'package:app_rareuser/screens/post_screen.dart';
-import 'package:app_rareuser/screens/result_screen.dart';
-import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

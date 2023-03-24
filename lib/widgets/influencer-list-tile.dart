@@ -37,23 +37,22 @@ class InfluencerListTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                child: Container(
-                  height: 75,
-                  width: 75,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    child: Image.network(
-                      pic,
-                      fit: BoxFit.cover,
-                    ),
+                height: 75,
+                width: 75,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  child: FadeInImage.assetNetwork(
+                    image: pic,
+                    placeholder: "assets/images/icon2.png",
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,15 +60,26 @@ class InfluencerListTile extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xfff7f7f7),
+                          Expanded(
+                            child: Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xfff7f7f7),
+                              ),
+                              softWrap: false,
+                              maxLines: 1,
+                              overflow: TextOverflow.fade, //new
                             ),
                           ),
-                          Icon(Icons.female_rounded, color: Colors.pink)
+                          // Icon(Icons.female_rounded, color: Colors.pink)
+                          gender == 'male'
+                              ? Icon(
+                                  Icons.male_rounded,
+                                  color: Colors.blue,
+                                )
+                              : Icon(Icons.female_rounded, color: Colors.pink),
                         ],
                       ),
                       Padding(
@@ -100,6 +110,7 @@ class InfluencerListTile extends StatelessWidget {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
                           itemCount: tags.length,
                           itemBuilder: ((context, index) => Row(
                                 children: [

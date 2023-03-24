@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "231002451453",
+    "project_id": "rareuser-cab36",
+    "storage_bucket": "rareuser-cab36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231002451453:android:6317b5071cc97475acbd94",
+        "android_client_info": {
+          "package_name": "com.fhdyt.app_rareuser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "231002451453-vv27hvrv567q2iv3cotftc4kgebidvj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuFXmexvKu_RtY3FgEZhxdg9XB6qvstec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231002451453-vv27hvrv567q2iv3cotftc4kgebidvj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
