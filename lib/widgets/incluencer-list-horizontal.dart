@@ -1,12 +1,6 @@
 import 'package:app_rareuser/routes/route.dart';
-import 'package:app_rareuser/screens/detail_screen.dart';
-import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
-import '../screens/pic_screen.dart';
 
 class InfluencerListHorizontal extends StatelessWidget {
   final String sId;

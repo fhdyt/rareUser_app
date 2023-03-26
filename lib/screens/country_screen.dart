@@ -18,9 +18,8 @@ class _CountryScreenState extends State<CountryScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<CountryProv>(context, listen: false)
           .fetchData()
-          .catchError((error) {
-        print(error);
-      }).then((value) {});
+          .catchError((error) {})
+          .then((value) {});
     });
 
     super.initState();

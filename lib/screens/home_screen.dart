@@ -15,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   Future<void> _refresh(BuildContext context) async {
     await Provider.of<Influencer>(context, listen: false).fetchData();
   }
@@ -47,6 +49,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     _isInit = false;
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {
+        Provider.of<Influencer>(context, listen: false)
+            .fetchDataNext()
+            .catchError((error) {})
+            .then((value) {});
+      } else {}
+    });
   }
 
   @override
@@ -187,6 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: ListView.builder(
                         itemCount: influData.items.length,
+                        controller: _scrollController,
                         shrinkWrap: true,
                         itemBuilder: ((context, i) => InfluencerListTile(
                               influData.items[i].sId.toString(),

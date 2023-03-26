@@ -1,7 +1,9 @@
 import 'package:app_rareuser/providers/country.dart';
 import 'package:app_rareuser/providers/influencer.dart';
-import 'package:app_rareuser/providers/post.dart';
+import 'package:app_rareuser/providers/influencer_detail.dart';
+import 'package:app_rareuser/providers/influencer_search.dart';
 import 'package:app_rareuser/providers/social_media.dart';
+import 'package:app_rareuser/providers/tags.dart';
 import 'package:app_rareuser/routes/route.dart';
 import 'package:app_rareuser/screens/favorite_screen.dart';
 import 'package:app_rareuser/screens/home_screen.dart';
@@ -50,10 +52,16 @@ class _MyAppState extends State<MyApp> {
           create: (ctx) => Influencer(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => CountryProv(),
+          create: (ctx) => InfluencerSearch(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => PostProv(),
+          create: (ctx) => InfluencerDetail(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => Tags(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => CountryProv(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => SocialMediaProv(),

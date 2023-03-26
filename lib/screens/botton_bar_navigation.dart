@@ -23,7 +23,6 @@ class _BottonBarNavigationState extends State<BottonBarNavigation> {
   var _currentIndex = 0;
 
   void onTapBar(int index) {
-    print(index);
     setState(() {
       _currentIndex = index;
     });

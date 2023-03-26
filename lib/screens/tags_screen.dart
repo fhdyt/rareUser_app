@@ -3,6 +3,8 @@ import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/tags.dart';
+
 class TagsScreen extends StatefulWidget {
   const TagsScreen({super.key});
 
@@ -14,11 +16,10 @@ class _TagsScreenState extends State<TagsScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<Influencer>(context, listen: false)
+      Provider.of<Tags>(context, listen: false)
           .allTags()
-          .catchError((error) {
-        print(error);
-      }).then((value) {});
+          .catchError((error) {})
+          .then((value) {});
     });
 
     super.initState();
@@ -26,7 +27,7 @@ class _TagsScreenState extends State<TagsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final countryData = Provider.of<Influencer>(context);
+    final countryData = Provider.of<Tags>(context);
     return Scaffold(
         backgroundColor: Color(0xff1A1A1A),
         appBar: AppBar(
@@ -53,7 +54,7 @@ class _TagsScreenState extends State<TagsScreen> {
               ? Center(
                   child: CircularProgressIndicator(color: Color(0xfff7f7f7)),
                 )
-              : countryData.items.length == 0
+              : countryData.items_tags.length == 0
                   ? Center(
                       child: Text('Not Found'),
                     )

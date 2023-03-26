@@ -32,7 +32,7 @@ class SocialMediaProv with ChangeNotifier {
       }).toList();
 
       _item = loadedCountry;
-      print(response.body);
+
       notifyListeners();
     } catch (error) {
       _isLoading = false;

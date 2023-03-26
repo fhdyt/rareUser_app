@@ -23,7 +23,6 @@ class _TopScreenState extends State<TopScreen> {
         _isLoading = true;
       });
       final cekData = Provider.of<Influencer>(context);
-      print('top user');
       if (cekData.items_top.length == 0) {
         Provider.of<Influencer>(context, listen: false)
             .fetchDataTop()

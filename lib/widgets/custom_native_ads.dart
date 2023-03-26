@@ -14,7 +14,6 @@ class _CustomNativeAdsState extends State<CustomNativeAds> {
   bool isAdLoaded = false;
   @override
   void initState() {
-    print("*************** INIT STATE ***************");
     super.initState();
 
     // TODO: Create a NativeAd instance
@@ -26,7 +25,6 @@ class _CustomNativeAdsState extends State<CustomNativeAds> {
         // Called when an ad is successfully received.
         onAdLoaded: (Ad ad) {
           var _add = ad as NativeAd;
-          print("**** AD ***** ${_add.responseInfo}");
           setState(() {
             _ad = _add;
             isAdLoaded = true;
@@ -36,7 +34,6 @@ class _CustomNativeAdsState extends State<CustomNativeAds> {
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           // Dispose the ad here to free resources.
           ad.dispose();
-          print('Ad load failed (code=${error.code} message=${error.message})');
         },
         // Called when an ad opens an overlay that covers the screen.
         onAdOpened: (Ad ad) => print('Ad opened.'),

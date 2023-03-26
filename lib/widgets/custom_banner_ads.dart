@@ -1,8 +1,6 @@
 import 'package:app_rareuser/service/ad_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class CustomBannerAds extends StatefulWidget {

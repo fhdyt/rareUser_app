@@ -16,9 +16,8 @@ class _SocialMediaScreenState extends State<SocialMediaScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<SocialMediaProv>(context, listen: false)
           .fetchData()
-          .catchError((error) {
-        print(error);
-      }).then((value) {});
+          .catchError((error) {})
+          .then((value) {});
     });
 
     super.initState();

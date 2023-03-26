@@ -17,31 +17,22 @@ class Influencer with ChangeNotifier {
     return [..._item_top];
   }
 
-  List<InfluencerModel> _item_search = [];
-  List<InfluencerModel> get items_search {
-    return [..._item_search];
-  }
-
-  List<InfluencerModel> _item_detail = [];
-  List<InfluencerModel> get items_detail {
-    return [..._item_detail];
-  }
-
   List<InfluencerModel> _item_related = [];
   List<InfluencerModel> get items_related {
     return [..._item_related];
   }
 
-  List<String> _item_tags = [];
-  List<String> get items_tags {
-    return [..._item_tags];
-  }
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  int _page = 1;
+  int get page => _page;
+
+  bool _maxPage = false;
+  bool get maxPage => _maxPage;
+
   Future<void> fetchData() async {
-    final url = Uri.parse(Endpoint.influencer);
+    final url = Uri.parse('${Endpoint.influencer}?page=1');
     if (_item.isEmpty) {
       try {
         final response = await http.get(url);
@@ -70,6 +61,47 @@ class Influencer with ChangeNotifier {
       }
       // _isLoading = false;
       // notifyListeners();
+    }
+  }
+
+  Future<void> fetchDataNext() async {
+    if (_maxPage) {
+    } else {
+      _page += 1;
+      notifyListeners();
+
+      final url = Uri.parse('${Endpoint.influencer}?page=${page}');
+      try {
+        final response = await http.get(url);
+        if (response.body == "[]") {
+          _page -= 1;
+          _maxPage = true;
+        } else {}
+        final List<InfluencerModel> loadedProducts = [];
+        final extractedData = json.decode(response.body);
+        extractedData.forEach((influencerData) {
+          loadedProducts.add(InfluencerModel(
+            sId: influencerData['_id'],
+            name: influencerData['name'],
+            pic: influencerData['pic'],
+            desc: influencerData['desc'],
+            country: Country(
+              influencerData['country']['name'],
+              influencerData['country']['country_id'],
+            ),
+            gender: influencerData['gender'],
+            tags: (influencerData['tags'] as List)
+                .map((tags) => tags.toString())
+                .toList(),
+          ));
+        });
+        _item += loadedProducts;
+        // _item.add(loadedProducts);
+      } catch (error) {
+        throw error;
+      }
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -106,35 +138,6 @@ class Influencer with ChangeNotifier {
     }
   }
 
-  Future<void> search(String param, String query) async {
-    final url = Uri.parse('${Endpoint.baseUrl}/search/${param}/${query}');
-    try {
-      final response = await http.get(url);
-      final List<InfluencerModel> loadedSearch = [];
-      final extractedData = jsonDecode(response.body);
-      extractedData.forEach((influencerData) {
-        loadedSearch.add(InfluencerModel(
-          sId: influencerData['_id'],
-          name: influencerData['name'],
-          pic: influencerData['pic'],
-          desc: influencerData['desc'],
-          country: Country(
-            influencerData['country']['name'],
-            influencerData['country']['country_id'],
-          ),
-          gender: influencerData['gender'],
-          tags: (influencerData['tags'] as List)
-              .map((tags) => tags.toString())
-              .toList(),
-        ));
-      });
-      _item_search = loadedSearch;
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
-  }
-
   Future<void> related(String args) async {
     final url = Uri.parse('${Endpoint.baseUrl}/influencer/related/${args}');
 
@@ -161,98 +164,6 @@ class Influencer with ChangeNotifier {
       });
       _item_related = loadedProducts;
     } catch (error) {
-      throw error;
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> detail(String args) async {
-    final url = Uri.parse('${Endpoint.baseUrl}/influencer/${args}');
-    try {
-      final response = await http.get(url);
-      final List<InfluencerModel> loaded = [];
-      final extractedData = jsonDecode(response.body) as List;
-      final detail_item = extractedData.map((influencerData) {
-        final platformExtract = influencerData['platforms'] as List;
-        final postExtract = influencerData['posts'] as List;
-        return InfluencerModel(
-          sId: influencerData['_id'],
-          name: influencerData['name'],
-          pic: influencerData['pic'],
-          desc: influencerData['desc'],
-          country: Country(
-            influencerData['country']['name'],
-            influencerData['country']['country_id'],
-          ),
-          gender: influencerData['gender'],
-          tags: (influencerData['tags'] as List)
-              .map((tags) => tags.toString())
-              .toList(),
-          platforms: platformExtract.map(
-            (platformData) {
-              return Platforms(
-                platform: platformData['platform'],
-                username: platformData['username'],
-                link: platformData['link'],
-                sId: platformData['_id'],
-              );
-            },
-          ).toList(),
-          posts: postExtract.map(
-            (postsData) {
-              return Posts(
-                url: postsData['url'],
-                source: postsData['source'],
-                file: postsData['file'],
-                thumbnail: postsData['thumbnail'],
-              );
-            },
-          ).toList(),
-        );
-      }).toList();
-      _item_detail = detail_item;
-      notifyListeners();
-    } catch (error) {
-      _item_detail = [];
-      throw error;
-    }
-  }
-
-  Future<void> allTags() async {
-    _isLoading = true;
-    notifyListeners();
-
-    final url = Uri.parse('${Endpoint.baseUrl}/search/tags/all');
-    try {
-      final response = await http.get(url);
-      final extractedData = jsonDecode(response.body);
-      print(extractedData);
-      _item_tags =
-          (extractedData as List).map((tags) => tags.toString()).toList();
-      notifyListeners();
-    } catch (error) {
-      _item_tags = [];
-      throw error;
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> allPlatform() async {
-    _isLoading = true;
-    notifyListeners();
-
-    final url = Uri.parse('${Endpoint.baseUrl}/search/platform/all');
-    try {
-      final response = await http.get(url);
-      final extractedData = jsonDecode(response.body);
-      print(extractedData);
-      _item_tags =
-          (extractedData as List).map((tags) => tags.toString()).toList();
-      notifyListeners();
-    } catch (error) {
-      _item_tags = [];
       throw error;
     }
     _isLoading = false;

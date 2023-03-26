@@ -2,10 +2,13 @@ import 'package:app_rareuser/screens/post_screen.dart';
 import 'package:app_rareuser/screens/result_screen.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/influencer.dart';
+import '../providers/influencer_detail.dart';
+import '../service/ad_helper.dart';
 import '../widgets/custom_native_ads.dart';
 import '../widgets/incluencer-list-horizontal.dart';
 
@@ -22,14 +25,63 @@ class _DetailScreenState extends State<DetailScreen> {
   var _isLoading = false;
   String _name = '';
   String _gender = '';
+  InterstitialAd? _interstitialAd;
+
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        // _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        // _createInterstitialAd();
+      },
+    );
+    _interstitialAd!.show();
+    _interstitialAd = null;
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: AdHelper.interstitialAdUnitId,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            setState(() {
+              _interstitialAd = ad;
+            });
+
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            _interstitialAd = null;
+          },
+        ));
+  }
+
+  @override
+  void dispose() {
+    _interstitialAd?.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
+    _createInterstitialAd();
     setState(() {
       _isLoading = true;
     });
 
-    Provider.of<Influencer>(context, listen: false)
+    Provider.of<InfluencerDetail>(context, listen: false)
         .detail(widget.args)
         .catchError((error) {})
         .then((value) {
@@ -41,13 +93,7 @@ class _DetailScreenState extends State<DetailScreen> {
     Provider.of<Influencer>(context, listen: false)
         .related(widget.args)
         .catchError((error) {})
-        .then((value) {
-      print('related');
-    });
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final args = ModalRoute.of(context)!.settings.arguments as String;
-
-    // });
+        .then((value) {});
     super.initState();
   }
 
@@ -63,7 +109,9 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final influData = Provider.of<Influencer>(context);
+    final influData = Provider.of<InfluencerDetail>(context);
+    final influDataRelated = Provider.of<Influencer>(context);
+
     if (influData.items_detail.length == 0) {
       setState(() {
         _name = '';
@@ -75,38 +123,13 @@ class _DetailScreenState extends State<DetailScreen> {
         _gender = influData.items_detail[0].gender.toString();
       });
     }
-    // final args = ModalRoute.of(context)!.settings.arguments as String;
+
+    if (influData.detailShow == 5) {
+      _showInterstitialAd();
+    }
+
     return Scaffold(
         backgroundColor: Color(0xff1A1A1A),
-        // appBar: AppBar(
-        //   iconTheme: IconThemeData(
-        //     color: Color(0xfff7f7f7), //change your color here
-        //   ),
-        //   title: Container(
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       crossAxisAlignment: CrossAxisAlignment.center,
-        //       children: [
-        //         Text(
-        //           _name,
-        //           style: TextStyle(
-        //               color: Color(0xfff7f7f7), fontWeight: FontWeight.bold),
-        //         ),
-        //         _gender == 'male'
-        //             ? Icon(
-        //                 Icons.male_rounded,
-        //                 color: Colors.blue,
-        //               )
-        //             : Icon(
-        //                 Icons.female_rounded,
-        //                 color: Colors.pink,
-        //               ),
-        //       ],
-        //     ),
-        //   ),
-        //   backgroundColor: Colors.amber,
-        //   elevation: 0,
-        // ),
         body: _isLoading
             ? Center(
                 child: CircularProgressIndicator(
@@ -171,7 +194,8 @@ class _DetailScreenState extends State<DetailScreen> {
                     body: Padding(
                       padding: const EdgeInsets.only(top: 15.0),
                       child: Center(
-                        child: contentMethod(influData, context),
+                        child:
+                            contentMethod(influData, influDataRelated, context),
                       ),
                     ),
                   )
@@ -179,8 +203,8 @@ class _DetailScreenState extends State<DetailScreen> {
         );
   }
 
-  SingleChildScrollView contentMethod(
-      Influencer influData, BuildContext context) {
+  SingleChildScrollView contentMethod(InfluencerDetail influData,
+      Influencer influDataRelated, BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
@@ -456,21 +480,28 @@ class _DetailScreenState extends State<DetailScreen> {
                       Expanded(
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: influData.items_related.length,
+                          itemCount: influDataRelated.items_related.length,
                           physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           itemBuilder: ((context, i) =>
                               InfluencerListHorizontal(
-                                influData.items_related[i].sId.toString(),
-                                influData.items_related[i].name.toString(),
-                                influData.items_related[i].pic.toString(),
-                                influData.items_related[i].desc.toString(),
-                                influData.items_related[i].country!.countryId
+                                influDataRelated.items_related[i].sId
                                     .toString(),
-                                influData.items_related[i].country!.name
+                                influDataRelated.items_related[i].name
                                     .toString(),
-                                influData.items_related[i].gender.toString(),
-                                influData.items_related[i].tags!.toList(),
+                                influDataRelated.items_related[i].pic
+                                    .toString(),
+                                influDataRelated.items_related[i].desc
+                                    .toString(),
+                                influDataRelated
+                                    .items_related[i].country!.countryId
+                                    .toString(),
+                                influDataRelated.items_related[i].country!.name
+                                    .toString(),
+                                influDataRelated.items_related[i].gender
+                                    .toString(),
+                                influDataRelated.items_related[i].tags!
+                                    .toList(),
                               )),
                         ),
                       ),
